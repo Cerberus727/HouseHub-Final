@@ -1,7 +1,7 @@
-/**
- * PropertyCard Component
- * Displays property information in a card layout
- */
+
+
+
+
 
 import { Link } from 'react-router-dom';
 import { FiHeart, FiMapPin, FiHome, FiDroplet, FiMaximize2 } from 'react-icons/fi';

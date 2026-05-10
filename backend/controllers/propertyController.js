@@ -1,19 +1,19 @@
-/**
- * Property Controller (MongoDB)
- * Handles property CRUD operations
- */
+
+
+
+
 
 const { Property, User } = require('../models');
 
-/**
- * Get all properties with search and filters
- * GET /api/properties
- */
+
+
+
+
 exports.getAllProperties = async (req, res) => {
   try {
     const { search, city, propertyType, listingType, minPrice, maxPrice, bedrooms, furnishingStatus } = req.query;
 
-    // Build query
+    
     const query = { is_active: true };
 
     if (search) {
@@ -37,7 +37,7 @@ exports.getAllProperties = async (req, res) => {
       .sort({ created_at: -1 })
       .lean();
 
-    // Format response
+    
     const formattedProperties = properties.map(prop => ({
       ...prop,
       id: prop._id,
@@ -59,10 +59,10 @@ exports.getAllProperties = async (req, res) => {
   }
 };
 
-/**
- * Get featured properties (latest properties)
- * GET /api/properties/featured
- */
+
+
+
+
 exports.getFeaturedProperties = async (req, res) => {
   try {
     const properties = await Property.find({ is_active: true })
@@ -92,10 +92,10 @@ exports.getFeaturedProperties = async (req, res) => {
   }
 };
 
-/**
- * Get property by ID
- * GET /api/properties/:id
- */
+
+
+
+
 exports.getPropertyById = async (req, res) => {
   try {
     const property = await Property.findById(req.params.id)
@@ -106,7 +106,7 @@ exports.getPropertyById = async (req, res) => {
       return res.status(404).json({ error: 'Property not found' });
     }
 
-    // Increment views
+    
     await Property.findByIdAndUpdate(req.params.id, { $inc: { views_count: 1 } });
 
     const formattedProperty = {
@@ -130,21 +130,21 @@ exports.getPropertyById = async (req, res) => {
   }
 };
 
-/**
- * Create new property
- * POST /api/properties
- */
+
+
+
+
 exports.createProperty = async (req, res) => {
   try {
     const userId = req.user.userId;
     const propertyData = req.body;
 
-    // Convert amenities array to JSON string
+    
     if (Array.isArray(propertyData.amenities)) {
       propertyData.amenities = JSON.stringify(propertyData.amenities);
     }
 
-    // Transform camelCase to snake_case for MongoDB
+    
     const transformedData = {
       user_id: userId,
       title: propertyData.title,
@@ -185,16 +185,16 @@ exports.createProperty = async (req, res) => {
   }
 };
 
-/**
- * Update property
- * PUT /api/properties/:id
- */
+
+
+
+
 exports.updateProperty = async (req, res) => {
   try {
     const userId = req.user.userId;
     const propertyId = req.params.id;
 
-    // Check if property belongs to user
+    
     const property = await Property.findById(propertyId);
 
     if (!property) {
@@ -205,12 +205,12 @@ exports.updateProperty = async (req, res) => {
       return res.status(403).json({ error: 'Unauthorized to update this property' });
     }
 
-    // Convert amenities array to JSON string
+    
     if (Array.isArray(req.body.amenities)) {
       req.body.amenities = JSON.stringify(req.body.amenities);
     }
 
-    // Transform camelCase to snake_case for MongoDB
+    
     const transformedData = {
       title: req.body.title,
       description: req.body.description,
@@ -251,16 +251,16 @@ exports.updateProperty = async (req, res) => {
   }
 };
 
-/**
- * Delete property
- * DELETE /api/properties/:id
- */
+
+
+
+
 exports.deleteProperty = async (req, res) => {
   try {
     const userId = req.user.userId;
     const propertyId = req.params.id;
 
-    // Check if property belongs to user
+    
     const property = await Property.findById(propertyId);
 
     if (!property) {
@@ -283,10 +283,10 @@ exports.deleteProperty = async (req, res) => {
   }
 };
 
-/**
- * Get user's properties
- * GET /api/properties/user/my-listings
- */
+
+
+
+
 exports.getUserProperties = async (req, res) => {
   try {
     const userId = req.user.userId;

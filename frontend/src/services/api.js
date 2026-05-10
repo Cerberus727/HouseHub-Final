@@ -1,26 +1,26 @@
-/**
- * API Service
- * Centralized API calls with JWT authentication
- */
+
+
+
+
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
-// Get token from localStorage
+
 const getToken = () => {
   return localStorage.getItem('token');
 };
 
-// Set token in localStorage
+
 const setToken = (token) => {
   localStorage.setItem('token', token);
 };
 
-// Remove token from localStorage
+
 const removeToken = () => {
   localStorage.removeItem('token');
 };
 
-// Create fetch options with auth header
+
 const createHeaders = (includeAuth = true) => {
   const headers = {
     'Content-Type': 'application/json'
@@ -36,7 +36,7 @@ const createHeaders = (includeAuth = true) => {
   return headers;
 };
 
-// Handle API response
+
 const handleResponse = async (response) => {
   if (!response.ok) {
     const error = await response.json().catch(() => ({ error: 'Request failed' }));
@@ -45,7 +45,7 @@ const handleResponse = async (response) => {
   return response.json();
 };
 
-// Auth API
+
 export const authAPI = {
   register: async (userData) => {
     const response = await fetch(`${API_URL}/auth/register`, {
@@ -94,7 +94,7 @@ export const authAPI = {
   }
 };
 
-// Properties API
+
 export const propertiesAPI = {
   getAll: async (filters = {}) => {
     const params = new URLSearchParams(filters);
@@ -152,7 +152,7 @@ export const propertiesAPI = {
   }
 };
 
-// Bookmarks API
+
 export const bookmarksAPI = {
   getAll: async () => {
     const response = await fetch(`${API_URL}/bookmarks`, {
@@ -177,7 +177,7 @@ export const bookmarksAPI = {
   }
 };
 
-// Messages API
+
 export const messagesAPI = {
   getConversations: async () => {
     const response = await fetch(`${API_URL}/messages/conversations`, {

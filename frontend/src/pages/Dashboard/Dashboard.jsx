@@ -16,7 +16,7 @@ const Dashboard = () => {
     fetchDashboardData();
   }, []);
 
-  // Refresh data when component becomes visible
+  
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (!document.hidden) {

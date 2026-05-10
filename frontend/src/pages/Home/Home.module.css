@@ -2,7 +2,7 @@
   min-height: 100vh;
 }
 
-/* Hero Section */
+
 .hero {
   background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
   color: var(--white);
@@ -105,7 +105,7 @@
   transform: translateY(-2px);
 }
 
-/* Featured Section */
+
 .featured {
   padding: 4rem 0;
 }
@@ -152,7 +152,7 @@
   gap: var(--spacing-xl);
 }
 
-/* Features Section */
+
 .features {
   padding: 4rem 0;
   background-color: var(--white);
@@ -188,7 +188,7 @@
   line-height: 1.6;
 }
 
-/* CTA Section */
+
 .cta {
   padding: 4rem 0;
   background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);

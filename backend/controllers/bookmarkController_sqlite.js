@@ -1,23 +1,23 @@
-/**
- * Bookmark Controller - SQLite Version
- */
+
+
+
 
 const { db } = require('../config/database');
 
-/**
- * Toggle bookmark (add/remove)
- * POST /api/bookmarks/:propertyId
- */
+
+
+
+
 exports.toggleBookmark = (req, res) => {
   try {
     const userId = req.user.userId;
     const { propertyId } = req.params;
 
-    // Check if bookmark exists
+    
     const existing = db.prepare('SELECT id FROM bookmarks WHERE user_id = ? AND property_id = ?').get(userId, propertyId);
 
     if (existing) {
-      // Remove bookmark
+      
       db.prepare('DELETE FROM bookmarks WHERE user_id = ? AND property_id = ?').run(userId, propertyId);
       
       res.json({
@@ -26,7 +26,7 @@ exports.toggleBookmark = (req, res) => {
         bookmarked: false
       });
     } else {
-      // Add bookmark
+      
       db.prepare('INSERT INTO bookmarks (user_id, property_id) VALUES (?, ?)').run(userId, propertyId);
       
       res.json({
@@ -41,10 +41,10 @@ exports.toggleBookmark = (req, res) => {
   }
 };
 
-/**
- * Get all bookmarked properties for current user
- * GET /api/bookmarks
- */
+
+
+
+
 exports.getUserBookmarks = (req, res) => {
   try {
     const userId = req.user.userId;
@@ -80,10 +80,10 @@ exports.getUserBookmarks = (req, res) => {
   }
 };
 
-/**
- * Check if property is bookmarked
- * GET /api/bookmarks/check/:propertyId
- */
+
+
+
+
 exports.checkBookmark = (req, res) => {
   try {
     const userId = req.user.userId;

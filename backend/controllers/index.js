@@ -1,11 +1,11 @@
-/**
- * Database Controller Router
- * Routes to the correct controller based on database type
- */
+
+
+
+
 
 const useMongoDB = !!process.env.MONGODB_URI;
 
-// Export the appropriate controllers
+
 module.exports = {
   authController: useMongoDB 
     ? require('./authController') 

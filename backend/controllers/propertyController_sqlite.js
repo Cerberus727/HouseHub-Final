@@ -1,14 +1,14 @@
-/**
- * Property Controller - SQLite Version
- * Simplified for demonstration with sample data
- */
+
+
+
+
 
 const { db } = require('../config/database');
 
-/**
- * Get all properties with search and filters
- * GET /api/properties
- */
+
+
+
+
 exports.getAllProperties = (req, res) => {
   try {
     const { search, city, propertyType, listingType, minPrice, maxPrice, bedrooms, furnishingStatus } = req.query;
@@ -71,7 +71,7 @@ exports.getAllProperties = (req, res) => {
 
     const properties = db.prepare(query).all(...params);
 
-    // Parse amenities and images
+    
     properties.forEach(prop => {
       prop.amenities = prop.amenities ? JSON.parse(prop.amenities) : [];
       prop.images = prop.images ? prop.images.split(',') : [];
@@ -88,10 +88,10 @@ exports.getAllProperties = (req, res) => {
   }
 };
 
-/**
- * Get featured properties (latest properties)
- * GET /api/properties/featured
- */
+
+
+
+
 exports.getFeaturedProperties = (req, res) => {
   try {
     const query = `
@@ -125,10 +125,10 @@ exports.getFeaturedProperties = (req, res) => {
   }
 };
 
-/**
- * Get single property by ID
- * GET /api/properties/:id
- */
+
+
+
+
 exports.getPropertyById = (req, res) => {
   try {
     const { id } = req.params;
@@ -157,7 +157,7 @@ exports.getPropertyById = (req, res) => {
     property.amenities = property.amenities ? JSON.parse(property.amenities) : [];
     property.images = property.images ? property.images.split(',') : [];
 
-    // Increment view count
+    
     db.prepare('UPDATE properties SET views_count = views_count + 1 WHERE id = ?').run(id);
 
     res.json({
@@ -170,10 +170,10 @@ exports.getPropertyById = (req, res) => {
   }
 };
 
-/**
- * Get properties by user (current user's listings)
- * GET /api/properties/user/me
- */
+
+
+
+
 exports.getUserProperties = (req, res) => {
   try {
     const userId = req.user.userId;
@@ -205,10 +205,10 @@ exports.getUserProperties = (req, res) => {
   }
 };
 
-/**
- * Create new property
- * POST /api/properties
- */
+
+
+
+
 exports.createProperty = (req, res) => {
   try {
     const userId = req.user.userId;
@@ -219,7 +219,7 @@ exports.createProperty = (req, res) => {
       amenities, images
     } = req.body;
 
-    // Insert property
+    
     const stmt = db.prepare(`
       INSERT INTO properties 
       (user_id, title, description, property_type, listing_type, price,
@@ -238,7 +238,7 @@ exports.createProperty = (req, res) => {
 
     const propertyId = result.lastInsertRowid;
 
-    // Insert images if provided
+    
     if (images && Array.isArray(images)) {
       const imgStmt = db.prepare('INSERT INTO property_images (property_id, image_url, is_primary, display_order) VALUES (?, ?, ?, ?)');
       images.forEach((img, i) => {
@@ -246,7 +246,7 @@ exports.createProperty = (req, res) => {
       });
     }
 
-    // Get created property
+    
     const property = db.prepare(`
       SELECT p.*, GROUP_CONCAT(pi.image_url) as images
       FROM properties p
@@ -269,10 +269,10 @@ exports.createProperty = (req, res) => {
   }
 };
 
-/**
- * Update property
- * PUT /api/properties/:id
- */
+
+
+
+
 exports.updateProperty = (req, res) => {
   try {
     const { id } = req.params;
@@ -284,7 +284,7 @@ exports.updateProperty = (req, res) => {
       amenities
     } = req.body;
 
-    // Check ownership
+    
     const property = db.prepare('SELECT user_id FROM properties WHERE id = ?').get(id);
     
     if (!property) {
@@ -295,7 +295,7 @@ exports.updateProperty = (req, res) => {
       return res.status(403).json({ error: 'Not authorized to update this property' });
     }
 
-    // Update property
+    
     const stmt = db.prepare(`
       UPDATE properties SET
         title = ?, description = ?, property_type = ?, listing_type = ?, price = ?,
@@ -313,7 +313,7 @@ exports.updateProperty = (req, res) => {
       id
     );
 
-    // Get updated property
+    
     const updated = db.prepare(`
       SELECT p.*, GROUP_CONCAT(pi.image_url) as images
       FROM properties p
@@ -336,16 +336,16 @@ exports.updateProperty = (req, res) => {
   }
 };
 
-/**
- * Delete property
- * DELETE /api/properties/:id
- */
+
+
+
+
 exports.deleteProperty = (req, res) => {
   try {
     const { id } = req.params;
     const userId = req.user.userId;
 
-    // Check ownership
+    
     const property = db.prepare('SELECT user_id FROM properties WHERE id = ?').get(id);
     
     if (!property) {
@@ -356,7 +356,7 @@ exports.deleteProperty = (req, res) => {
       return res.status(403).json({ error: 'Not authorized to delete this property' });
     }
 
-    // Delete property (images will be deleted via CASCADE)
+    
     db.prepare('DELETE FROM properties WHERE id = ?').run(id);
 
     res.json({

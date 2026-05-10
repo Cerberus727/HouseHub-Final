@@ -1,27 +1,27 @@
-/**
- * Bookmark Controller (MongoDB)
- * Handles bookmark toggle and retrieval
- */
+
+
+
+
 
 const { Bookmark, Property } = require('../models');
 
-/**
- * Toggle bookmark for a property
- * POST /api/bookmarks/:propertyId
- */
+
+
+
+
 exports.toggleBookmark = async (req, res) => {
   try {
     const userId = req.user.userId;
     const propertyId = req.params.propertyId;
 
-    // Check if bookmark exists
+    
     const existingBookmark = await Bookmark.findOne({
       user_id: userId,
       property_id: propertyId
     });
 
     if (existingBookmark) {
-      // Remove bookmark
+      
       await Bookmark.findByIdAndDelete(existingBookmark._id);
       return res.json({
         success: true,
@@ -29,7 +29,7 @@ exports.toggleBookmark = async (req, res) => {
         message: 'Bookmark removed'
       });
     } else {
-      // Add bookmark
+      
       await Bookmark.create({
         user_id: userId,
         property_id: propertyId
@@ -46,10 +46,10 @@ exports.toggleBookmark = async (req, res) => {
   }
 };
 
-/**
- * Get user's bookmarked properties
- * GET /api/bookmarks
- */
+
+
+
+
 exports.getUserBookmarks = async (req, res) => {
   try {
     const userId = req.user.userId;
@@ -65,9 +65,9 @@ exports.getUserBookmarks = async (req, res) => {
       .sort({ created_at: -1 })
       .lean();
 
-    // Format properties
+    
     const properties = bookmarks
-      .filter(b => b.property_id) // Filter out null properties
+      .filter(b => b.property_id) 
       .map(bookmark => {
         const prop = bookmark.property_id;
         return {
@@ -93,10 +93,10 @@ exports.getUserBookmarks = async (req, res) => {
   }
 };
 
-/**
- * Check if property is bookmarked
- * GET /api/bookmarks/check/:propertyId
- */
+
+
+
+
 exports.checkBookmark = async (req, res) => {
   try {
     const userId = req.user.userId;

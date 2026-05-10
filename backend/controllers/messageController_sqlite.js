@@ -1,13 +1,13 @@
-/**
- * Message Controller - SQLite Version
- */
+
+
+
 
 const { db } = require('../config/database');
 
-/**
- * Send message
- * POST /api/messages
- */
+
+
+
+
 exports.sendMessage = (req, res) => {
   try {
     const senderId = req.user.userId;
@@ -23,9 +23,9 @@ exports.sendMessage = (req, res) => {
       body: req.body
     });
     
-    const messageContent = content || message; // Accept both field names
+    const messageContent = content || message; 
     
-    // Parse receiverId to integer
+    
     const receiverIdInt = parseInt(receiverId);
     const propertyIdInt = propertyId ? parseInt(propertyId) : null;
 
@@ -41,13 +41,13 @@ exports.sendMessage = (req, res) => {
     
     console.log('✅ Validation passed. Looking for conversation...');
 
-    // Verify database is available
+    
     if (!db) {
       console.error('❌ Database connection is null or undefined');
       return res.status(500).json({ error: 'Database connection error' });
     }
 
-    // Check or create conversation - find by users, not property
+    
     let conversation;
     try {
       conversation = db.prepare(`
@@ -72,13 +72,13 @@ exports.sendMessage = (req, res) => {
         console.log('✅ Found existing conversation with ID:', conversation.id);
       }
 
-      // Insert message
+      
       console.log('💬 Inserting message into database...');
       const stmt = db.prepare('INSERT INTO messages (conversation_id, sender_id, receiver_id, message) VALUES (?, ?, ?, ?)');
       const result = stmt.run(conversation.id, senderId, receiverIdInt, messageContent);
       console.log('✅ Message inserted with ID:', result.lastInsertRowid);
 
-      // Update conversation timestamp
+      
       db.prepare('UPDATE conversations SET last_message_at = CURRENT_TIMESTAMP WHERE id = ?').run(conversation.id);
       console.log('✅ Conversation timestamp updated');
     } catch (dbError) {
@@ -97,10 +97,10 @@ exports.sendMessage = (req, res) => {
   }
 };
 
-/**
- * Get all conversations for current user
- * GET /api/messages/conversations
- */
+
+
+
+
 exports.getConversations = (req, res) => {
   try {
     const userId = req.user.userId;
@@ -134,16 +134,16 @@ exports.getConversations = (req, res) => {
   }
 };
 
-/**
- * Get messages in a conversation
- * GET /api/messages/conversation/:userId
- */
+
+
+
+
 exports.getConversationMessages = (req, res) => {
   try {
     const currentUserId = req.user.userId;
     const { userId: otherUserId } = req.params;
 
-    // Get conversation
+    
     const conversation = db.prepare(`
       SELECT id FROM conversations 
       WHERE (user1_id = ? AND user2_id = ?) OR (user1_id = ? AND user2_id = ?)
@@ -156,7 +156,7 @@ exports.getConversationMessages = (req, res) => {
       });
     }
 
-    // Get messages
+    
     const messages = db.prepare(`
       SELECT m.*, 
         u.display_name as sender_name,
@@ -167,7 +167,7 @@ exports.getConversationMessages = (req, res) => {
       ORDER BY m.created_at ASC
     `).all(conversation.id);
 
-    // Mark messages as read
+    
     db.prepare('UPDATE messages SET is_read = 1 WHERE conversation_id = ? AND receiver_id = ?').run(conversation.id, currentUserId);
 
     res.json({
@@ -180,10 +180,10 @@ exports.getConversationMessages = (req, res) => {
   }
 };
 
-/**
- * Get unread message count
- * GET /api/messages/unread
- */
+
+
+
+
 exports.getUnreadCount = (req, res) => {
   try {
     const userId = req.user.userId;

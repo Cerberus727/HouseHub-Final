@@ -1,14 +1,14 @@
-/**
- * Validation Middleware
- * Uses express-validator for request validation
- */
+
+
+
+
 
 const { validationResult } = require('express-validator');
 
-/**
- * Middleware to validate request based on validation rules
- * Returns 400 error if validation fails
- */
+
+
+
+
 const validate = (req, res, next) => {
   const errors = validationResult(req);
   

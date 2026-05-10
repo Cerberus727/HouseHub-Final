@@ -1,7 +1,7 @@
-/**
- * Message Model
- * Mongoose schema for chat messages
- */
+
+
+
+
 
 const mongoose = require('mongoose');
 
@@ -33,7 +33,7 @@ const messageSchema = new mongoose.Schema({
   timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }
 });
 
-// Index for efficient message queries
+
 messageSchema.index({ conversation_id: 1, created_at: -1 });
 
 module.exports = mongoose.model('Message', messageSchema);

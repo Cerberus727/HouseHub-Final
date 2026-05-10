@@ -1,7 +1,7 @@
-/**
- * MongoDB Seed Script
- * Seeds database with sample users and properties
- */
+
+
+
+
 
 require('dotenv').config();
 const mongoose = require('mongoose');
@@ -22,12 +22,12 @@ const seedDatabase = async () => {
   try {
     console.log('🔧 Seeding MongoDB database...\n');
 
-    // Clear existing data
+    
     await User.deleteMany({});
     await Property.deleteMany({});
     console.log('🗑️  Cleared existing data');
 
-    // Create users
+    
     console.log('👥 Creating users...');
     const password_hash = await bcrypt.hash('password123', 10);
 
@@ -54,7 +54,7 @@ const seedDatabase = async () => {
 
     console.log(`   ✓ ${users.length} users created`);
 
-    // Create properties
+    
     console.log('🏠 Creating properties...');
 
     const properties = [
@@ -180,5 +180,5 @@ const seedDatabase = async () => {
   }
 };
 
-// Run seed
+
 connectDB().then(seedDatabase);

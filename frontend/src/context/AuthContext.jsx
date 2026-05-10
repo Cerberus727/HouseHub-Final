@@ -1,7 +1,7 @@
-/**
- * Auth Context - JWT Version
- * Global authentication state management
- */
+
+
+
+
 
 import { createContext, useContext, useState, useEffect } from 'react';
 import { authAPI, getToken, removeToken } from '../services/api';
@@ -21,7 +21,7 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check if user is logged in on mount
+    
     const initAuth = async () => {
       const token = getToken();
       

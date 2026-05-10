@@ -1,11 +1,11 @@
-/**
- * MongoDB Database Connection
- * Uses Mongoose to connect to MongoDB Atlas
- */
+
+
+
+
 
 const mongoose = require('mongoose');
 
-// MongoDB connection
+
 const connectDB = async () => {
   try {
     const conn = await mongoose.connect(process.env.MONGODB_URI);
@@ -19,7 +19,7 @@ const connectDB = async () => {
   }
 };
 
-// Test connection
+
 const testConnection = async () => {
   if (mongoose.connection.readyState === 1) {
     console.log('✅ MongoDB connection is active');

@@ -1,7 +1,7 @@
-/**
- * Message Routes
- * Routes for messaging between users
- */
+
+
+
+
 
 const express = require('express');
 const router = express.Router();
@@ -16,16 +16,16 @@ const {
   getUnreadCount
 } = messageController;
 
-// Get all conversations (protected)
+
 router.get('/conversations', authenticateUser, getConversations);
 
-// Get unread message count (protected)
+
 router.get('/unread', authenticateUser, getUnreadCount);
 
-// Get conversation with specific user (protected)
+
 router.get('/conversation/:userId', authenticateUser, getConversationMessages);
 
-// Send message (protected)
+
 router.post(
   '/',
   [

@@ -1,7 +1,7 @@
-/**
- * User Model
- * Mongoose schema for user accounts
- */
+
+
+
+
 
 const mongoose = require('mongoose');
 

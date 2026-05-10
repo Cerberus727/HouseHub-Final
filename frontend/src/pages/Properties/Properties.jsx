@@ -1,7 +1,7 @@
-/**
- * Properties Page
- * Browse and search properties with filters
- */
+
+
+
+
 
 import { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
@@ -116,7 +116,7 @@ const Properties = () => {
         </div>
 
         <div className={styles.content}>
-          {/* Filters Sidebar */}
+          {}
           <aside className={`${styles.filters} ${showFilters ? styles.showFilters : ''}`}>
             <div className={styles.filtersHeader}>
               <h3>Filters</h3>
@@ -229,7 +229,7 @@ const Properties = () => {
             </button>
           </aside>
 
-          {/* Properties Grid */}
+          {}
           <div className={styles.propertiesContainer}>
             {loading ? (
               <div className={styles.loadingContainer}>

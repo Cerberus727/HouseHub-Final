@@ -53,7 +53,7 @@
   gap: var(--spacing-xl);
 }
 
-/* Filters */
+
 .filters {
   background-color: var(--white);
   border-radius: var(--radius-lg);
@@ -166,7 +166,7 @@
   background-color: var(--primary-light);
 }
 
-/* Properties Container */
+
 .propertiesContainer {
   min-height: 400px;
 }

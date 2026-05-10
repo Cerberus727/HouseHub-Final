@@ -1,14 +1,14 @@
-/**
- * SQLite Schema Setup and Seed Data
- * Creates tables and populates with sample data
- */
+
+
+
+
 
 const { db } = require('./config/database');
 const bcrypt = require('bcryptjs');
 
 console.log('🔧 Setting up SQLite database...\n');
 
-// Drop existing tables to ensure clean setup
+
 db.exec(`
   DROP TABLE IF EXISTS messages;
   DROP TABLE IF EXISTS conversations;
@@ -20,7 +20,7 @@ db.exec(`
 
 console.log('🗑️  Dropped existing tables');
 
-// Create tables
+
 db.exec(`
   -- Users table
   CREATE TABLE IF NOT EXISTS users (
@@ -113,7 +113,7 @@ db.exec(`
 
 console.log('✅ Tables created\n');
 
-// Sample users
+
 const users = [
   { email: 'john@example.com', password: 'password123', name: 'John Doe', phone: '+91 9876543210' },
   { email: 'jane@example.com', password: 'password123', name: 'Jane Smith', phone: '+91 9876543211' },
@@ -130,7 +130,7 @@ const userIds = users.map(user => {
   return info.lastInsertRowid;
 });
 
-// Sample properties
+
 const properties = [
   {title:'Spacious 2BHK Apartment in Koramangala',desc:'Beautiful 2BHK apartment with modern amenities in the heart of Koramangala.',type:'apartment',listing:'rent',price:25000,addr:'123 Main Road, Koramangala 5th Block',city:'Bangalore',state:'Karnataka',pin:'560095',bed:2,bath:2,sqft:1200,furnish:'semi-furnished',amen:['WiFi','Parking','Security','Power Backup','Lift'],imgs:['https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800','https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=800']},
   {title:'Luxury 3BHK Villa with Garden',desc:'Stunning 3BHK independent villa with private garden and parking.',type:'villa',listing:'rent',price:45000,addr:'456 Palm Grove, Whitefield',city:'Bangalore',state:'Karnataka',pin:'560066',bed:3,bath:3,sqft:2500,furnish:'furnished',amen:['WiFi','Parking','Garden','Security','Power Backup','Gym'],imgs:['https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800','https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800']},

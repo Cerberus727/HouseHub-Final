@@ -1,7 +1,7 @@
-/**
- * Input Component
- * Reusable text input with label and error message
- */
+
+
+
+
 
 import styles from './Input.module.css';
 

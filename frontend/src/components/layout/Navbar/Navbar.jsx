@@ -1,7 +1,7 @@
-/**
- * Navbar Component
- * Main navigation bar with user menu and links
- */
+
+
+
+
 
 import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -49,7 +49,7 @@ const Navbar = () => {
           <span className={styles.logoText}>HouseHub</span>
         </Link>
 
-        {/* Desktop Navigation */}
+        {}
         <div className={styles.desktopNav}>
           <Link to="/properties" className={styles.navLink}>
             <FiSearch /> Browse
@@ -103,7 +103,7 @@ const Navbar = () => {
           )}
         </div>
 
-        {/* Mobile Menu Toggle */}
+        {}
         <button 
           className={styles.mobileMenuButton}
           onClick={() => setShowMobileMenu(!showMobileMenu)}
@@ -112,7 +112,7 @@ const Navbar = () => {
         </button>
       </div>
 
-      {/* Mobile Navigation */}
+      {}
       {showMobileMenu && (
         <div className={styles.mobileNav}>
           <Link to="/properties" className={styles.mobileNavLink}>

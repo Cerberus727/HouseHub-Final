@@ -1,15 +1,15 @@
-/**
- * Property Controller
- * Handles property listing CRUD operations, search, and filtering
- */
+
+
+
+
 
 const { db } = require('../config/database');
-// Image uploads now use direct URLs (Unsplash) - no cloud storage needed
 
-/**
- * Create new property listing
- * POST /api/properties
- */
+
+
+
+
+
 const createProperty = async (req, res) => {
   const connection = await pool.getConnection();
   
@@ -23,7 +23,7 @@ const createProperty = async (req, res) => {
       amenities
     } = req.body;
 
-    // Insert property
+    
     const [result] = await connection.query(
       `INSERT INTO properties 
        (user_id, title, description, property_type, listing_type, price,
@@ -41,7 +41,7 @@ const createProperty = async (req, res) => {
 
     const propertyId = result.insertId;
 
-    // Upload images if provided
+    
     if (req.files && req.files.length > 0) {
       for (let i = 0; i < req.files.length; i++) {
         const file = req.files[i];
@@ -57,7 +57,7 @@ const createProperty = async (req, res) => {
 
     await connection.commit();
 
-    // Get the created property with images
+    
     const [properties] = await connection.query(
       `SELECT p.*, 
         GROUP_CONCAT(pi.image_url ORDER BY pi.display_order) as images,
@@ -94,10 +94,10 @@ const createProperty = async (req, res) => {
   }
 };
 
-/**
- * Get all properties with search and filters
- * GET /api/properties
- */
+
+
+
+
 const getProperties = async (req, res) => {
   try {
     const {
@@ -118,32 +118,32 @@ const getProperties = async (req, res) => {
 
     const params = [];
 
-    // Search by title or description
+    
     if (search) {
       query += ` AND (p.title LIKE ? OR p.description LIKE ? OR p.city LIKE ?)`;
       const searchTerm = `%${search}%`;
       params.push(searchTerm, searchTerm, searchTerm);
     }
 
-    // Filter by city
+    
     if (city) {
       query += ` AND p.city = ?`;
       params.push(city);
     }
 
-    // Filter by property type
+    
     if (propertyType) {
       query += ` AND p.property_type = ?`;
       params.push(propertyType);
     }
 
-    // Filter by listing type
+    
     if (listingType) {
       query += ` AND p.listing_type = ?`;
       params.push(listingType);
     }
 
-    // Filter by price range
+    
     if (minPrice) {
       query += ` AND p.price >= ?`;
       params.push(minPrice);
@@ -153,19 +153,19 @@ const getProperties = async (req, res) => {
       params.push(maxPrice);
     }
 
-    // Filter by bedrooms
+    
     if (bedrooms) {
       query += ` AND p.bedrooms >= ?`;
       params.push(bedrooms);
     }
 
-    // Filter by furnishing status
+    
     if (furnishingStatus) {
       query += ` AND p.furnishing_status = ?`;
       params.push(furnishingStatus);
     }
 
-    // Filter by amenities
+    
     if (amenities) {
       const amenityList = Array.isArray(amenities) ? amenities : [amenities];
       amenityList.forEach(amenity => {
@@ -174,19 +174,19 @@ const getProperties = async (req, res) => {
       });
     }
 
-    // Get total count
+    
     const countQuery = query.replace(/SELECT p\.\*.*FROM/s, 'SELECT COUNT(DISTINCT p.id) as total FROM');
     const [countResult] = await pool.query(countQuery, params);
     const total = countResult[0].total;
 
-    // Add pagination
+    
     query += ` ORDER BY p.created_at DESC LIMIT ? OFFSET ?`;
     const offset = (page - 1) * limit;
     params.push(parseInt(limit), parseInt(offset));
 
     const [properties] = await pool.query(query, params);
 
-    // Parse amenities JSON
+    
     properties.forEach(property => {
       property.amenities = property.amenities ? JSON.parse(property.amenities) : [];
     });
@@ -211,21 +211,21 @@ const getProperties = async (req, res) => {
   }
 };
 
-/**
- * Get property by ID
- * GET /api/properties/:id
- */
+
+
+
+
 const getPropertyById = async (req, res) => {
   try {
     const propertyId = req.params.id;
 
-    // Increment views count
+    
     await pool.query(
       'UPDATE properties SET views_count = views_count + 1 WHERE id = ?',
       [propertyId]
     );
 
-    // Get property with all details
+    
     const [properties] = await pool.query(
       `SELECT p.*, 
         u.display_name as owner_name,
@@ -246,7 +246,7 @@ const getPropertyById = async (req, res) => {
       });
     }
 
-    // Get images
+    
     const [images] = await pool.query(
       'SELECT image_url, is_primary, display_order FROM property_images WHERE property_id = ? ORDER BY display_order',
       [propertyId]
@@ -256,7 +256,7 @@ const getPropertyById = async (req, res) => {
     property.amenities = property.amenities ? JSON.parse(property.amenities) : [];
     property.images = images.map(img => img.image_url);
 
-    // Check if bookmarked by current user
+    
     if (req.user) {
       const [bookmarks] = await pool.query(
         'SELECT id FROM bookmarks WHERE user_id = ? AND property_id = ?',
@@ -279,17 +279,17 @@ const getPropertyById = async (req, res) => {
   }
 };
 
-/**
- * Update property
- * PUT /api/properties/:id
- */
+
+
+
+
 const updateProperty = async (req, res) => {
   const connection = await pool.getConnection();
   
   try {
     const propertyId = req.params.id;
 
-    // Check if user owns the property
+    
     const [properties] = await connection.query(
       'SELECT user_id FROM properties WHERE id = ?',
       [propertyId]
@@ -318,7 +318,7 @@ const updateProperty = async (req, res) => {
       amenities, status
     } = req.body;
 
-    // Build update query
+    
     const updates = [];
     const values = [];
 
@@ -349,9 +349,9 @@ const updateProperty = async (req, res) => {
       );
     }
 
-    // Handle new images if provided
+    
     if (req.files && req.files.length > 0) {
-      // Get current image count
+      
       const [currentImages] = await connection.query(
         'SELECT COUNT(*) as count FROM property_images WHERE property_id = ?',
         [propertyId]
@@ -374,7 +374,7 @@ const updateProperty = async (req, res) => {
 
     await connection.commit();
 
-    // Get updated property
+    
     const [updatedProperties] = await connection.query(
       `SELECT p.*, 
         GROUP_CONCAT(pi.image_url ORDER BY pi.display_order) as images
@@ -407,15 +407,15 @@ const updateProperty = async (req, res) => {
   }
 };
 
-/**
- * Delete property
- * DELETE /api/properties/:id
- */
+
+
+
+
 const deleteProperty = async (req, res) => {
   try {
     const propertyId = req.params.id;
 
-    // Check if user owns the property
+    
     const [properties] = await pool.query(
       'SELECT user_id FROM properties WHERE id = ?',
       [propertyId]
@@ -435,7 +435,7 @@ const deleteProperty = async (req, res) => {
       });
     }
 
-    // Delete property (images will be deleted via CASCADE)
+    
     await pool.query('DELETE FROM properties WHERE id = ?', [propertyId]);
 
     res.status(200).json({
@@ -452,10 +452,10 @@ const deleteProperty = async (req, res) => {
   }
 };
 
-/**
- * Get user's properties
- * GET /api/properties/user/my-listings
- */
+
+
+
+
 const getUserProperties = async (req, res) => {
   try {
     const { status, page = 1, limit = 12 } = req.query;
@@ -476,19 +476,19 @@ const getUserProperties = async (req, res) => {
       params.push(status);
     }
 
-    // Get total count
+    
     const countQuery = query.replace(/SELECT p\.\*.*FROM/s, 'SELECT COUNT(*) as total FROM');
     const [countResult] = await pool.query(countQuery, params);
     const total = countResult[0].total;
 
-    // Add pagination
+    
     query += ` ORDER BY p.created_at DESC LIMIT ? OFFSET ?`;
     const offset = (page - 1) * limit;
     params.push(parseInt(limit), parseInt(offset));
 
     const [properties] = await pool.query(query, params);
 
-    // Parse amenities
+    
     properties.forEach(property => {
       property.amenities = property.amenities ? JSON.parse(property.amenities) : [];
     });

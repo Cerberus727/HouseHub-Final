@@ -1,7 +1,7 @@
-/**
- * Property Details Page
- * View detailed information about a property
- */
+
+
+
+
 
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -95,7 +95,7 @@ const PropertyDetails = () => {
   return (
     <div className={styles.propertyDetails}>
       <div className={styles.container}>
-        {/* Image Gallery */}
+        {}
         <div className={styles.gallery}>
           {images.length > 0 ? (
             <>
@@ -122,7 +122,7 @@ const PropertyDetails = () => {
         </div>
 
         <div className={styles.content}>
-          {/* Main Info */}
+          {}
           <div className={styles.mainInfo}>
             <div className={styles.header}>
               <div>
@@ -180,7 +180,7 @@ const PropertyDetails = () => {
             )}
           </div>
 
-          {/* Owner Card */}
+          {}
           <div className={styles.ownerCard}>
             <h3>{currentUser && currentUser.id === property.owner_id ? 'Manage Property' : 'Contact Owner'}</h3>
             {currentUser && currentUser.id === property.owner_id ? (

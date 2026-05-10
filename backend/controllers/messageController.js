@@ -1,20 +1,20 @@
-/**
- * Message Controller (MongoDB)
- * Handles messaging and conversations
- */
+
+
+
+
 
 const { Message, Conversation, User, Property } = require('../models');
 
-/**
- * Send a message
- * POST /api/messages
- */
+
+
+
+
 exports.sendMessage = async (req, res) => {
   try {
     const senderId = req.user.userId;
     const { receiverId, content, propertyId } = req.body;
 
-    // Find or create conversation
+    
     let conversation = await Conversation.findOne({
       $or: [
         { user1_id: senderId, user2_id: receiverId },
@@ -30,7 +30,7 @@ exports.sendMessage = async (req, res) => {
       });
     }
 
-    // Create message
+    
     const message = await Message.create({
       conversation_id: conversation._id,
       sender_id: senderId,
@@ -38,12 +38,12 @@ exports.sendMessage = async (req, res) => {
       content
     });
 
-    // Update conversation last message time
+    
     await Conversation.findByIdAndUpdate(conversation._id, {
       last_message_at: new Date()
     });
 
-    // Populate sender details
+    
     const populatedMessage = await Message.findById(message._id)
       .populate('sender_id', 'display_name profile_image_url')
       .lean();
@@ -61,10 +61,10 @@ exports.sendMessage = async (req, res) => {
   }
 };
 
-/**
- * Get conversations for user
- * GET /api/messages/conversations
- */
+
+
+
+
 exports.getConversations = async (req, res) => {
   try {
     const userId = req.user.userId;
@@ -78,7 +78,7 @@ exports.getConversations = async (req, res) => {
       .sort({ last_message_at: -1 })
       .lean();
 
-    // Get last message for each conversation
+    
     const conversationsWithMessages = await Promise.all(
       conversations.map(async (conv) => {
         const lastMessage = await Message.findOne({ conversation_id: conv._id })
@@ -87,7 +87,7 @@ exports.getConversations = async (req, res) => {
 
         const otherUser = conv.user1_id._id.toString() === userId ? conv.user2_id : conv.user1_id;
 
-        // Count unread messages
+        
         const unreadCount = await Message.countDocuments({
           conversation_id: conv._id,
           receiver_id: userId,
@@ -118,16 +118,16 @@ exports.getConversations = async (req, res) => {
   }
 };
 
-/**
- * Get messages in a conversation
- * GET /api/messages/conversation/:userId
- */
+
+
+
+
 exports.getConversationMessages = async (req, res) => {
   try {
     const currentUserId = req.user.userId;
     const otherUserId = req.params.userId;
 
-    // Find conversation
+    
     const conversation = await Conversation.findOne({
       $or: [
         { user1_id: currentUserId, user2_id: otherUserId },
@@ -143,13 +143,13 @@ exports.getConversationMessages = async (req, res) => {
       });
     }
 
-    // Get messages
+    
     const messages = await Message.find({ conversation_id: conversation._id })
       .populate('sender_id', 'display_name profile_image_url')
       .sort({ created_at: 1 })
       .lean();
 
-    // Mark messages as read
+    
     await Message.updateMany(
       {
         conversation_id: conversation._id,
@@ -184,10 +184,10 @@ exports.getConversationMessages = async (req, res) => {
   }
 };
 
-/**
- * Get unread message count
- * GET /api/messages/unread
- */
+
+
+
+
 exports.getUnreadCount = async (req, res) => {
   try {
     const userId = req.user.userId;

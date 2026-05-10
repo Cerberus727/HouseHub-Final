@@ -1,7 +1,7 @@
-/**
- * Main App Component
- * Sets up routing and context providers
- */
+
+
+
+
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
@@ -34,7 +34,7 @@ function App() {
               <Route path="/properties" element={<Properties />} />
               <Route path="/property/:id" element={<PropertyDetails />} />
               
-              {/* Protected Routes */}
+              {}
               <Route path="/post-property" element={
                 <PrivateRoute><PostProperty /></PrivateRoute>
               } />

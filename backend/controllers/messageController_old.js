@@ -1,14 +1,14 @@
-/**
- * Message Controller
- * Handles messaging between users
- */
+
+
+
+
 
 const { pool } = require('../config/database');
 
-/**
- * Send a message
- * POST /api/messages
- */
+
+
+
+
 const sendMessage = async (req, res) => {
   const connection = await pool.getConnection();
   
@@ -18,7 +18,7 @@ const sendMessage = async (req, res) => {
     const { receiverId, propertyId, message } = req.body;
     const senderId = req.user.id;
 
-    // Check if receiver exists
+    
     const [users] = await connection.query(
       'SELECT id FROM users WHERE id = ?',
       [receiverId]
@@ -31,7 +31,7 @@ const sendMessage = async (req, res) => {
       });
     }
 
-    // Insert message
+    
     const [result] = await connection.query(
       `INSERT INTO messages (sender_id, receiver_id, property_id, message)
        VALUES (?, ?, ?, ?)`,
@@ -40,7 +40,7 @@ const sendMessage = async (req, res) => {
 
     const messageId = result.insertId;
 
-    // Create or update conversation
+    
     const user1Id = Math.min(senderId, receiverId);
     const user2Id = Math.max(senderId, receiverId);
 
@@ -53,7 +53,7 @@ const sendMessage = async (req, res) => {
 
     await connection.commit();
 
-    // Get the created message
+    
     const [messages] = await connection.query(
       `SELECT m.*, 
         s.display_name as sender_name,
@@ -85,17 +85,17 @@ const sendMessage = async (req, res) => {
   }
 };
 
-/**
- * Get conversation between two users
- * GET /api/messages/conversation/:userId
- */
+
+
+
+
 const getConversation = async (req, res) => {
   try {
     const otherUserId = req.params.userId;
     const currentUserId = req.user.id;
     const { page = 1, limit = 50 } = req.query;
 
-    // Get total count
+    
     const [countResult] = await pool.query(
       `SELECT COUNT(*) as total 
        FROM messages 
@@ -105,7 +105,7 @@ const getConversation = async (req, res) => {
     );
     const total = countResult[0].total;
 
-    // Get messages
+    
     const offset = (page - 1) * limit;
     const [messages] = await pool.query(
       `SELECT m.*, 
@@ -123,7 +123,7 @@ const getConversation = async (req, res) => {
       [currentUserId, otherUserId, otherUserId, currentUserId, parseInt(limit), parseInt(offset)]
     );
 
-    // Mark messages as read
+    
     await pool.query(
       `UPDATE messages 
        SET is_read = TRUE 
@@ -151,10 +151,10 @@ const getConversation = async (req, res) => {
   }
 };
 
-/**
- * Get all conversations for current user
- * GET /api/messages/conversations
- */
+
+
+
+
 const getConversations = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -208,10 +208,10 @@ const getConversations = async (req, res) => {
   }
 };
 
-/**
- * Get unread message count
- * GET /api/messages/unread-count
- */
+
+
+
+
 const getUnreadCount = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -235,10 +235,10 @@ const getUnreadCount = async (req, res) => {
   }
 };
 
-/**
- * Mark conversation as read
- * PUT /api/messages/mark-read/:userId
- */
+
+
+
+
 const markAsRead = async (req, res) => {
   try {
     const otherUserId = req.params.userId;

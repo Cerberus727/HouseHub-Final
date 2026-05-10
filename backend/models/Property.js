@@ -1,7 +1,7 @@
-/**
- * Property Model
- * Mongoose schema for property listings
- */
+
+
+
+
 
 const mongoose = require('mongoose');
 

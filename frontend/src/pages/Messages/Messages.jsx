@@ -17,7 +17,7 @@ const Messages = () => {
   useEffect(() => {
     fetchConversations();
     
-    // Check if starting new conversation with a user
+    
     const userId = searchParams.get('userId');
     const propertyId = searchParams.get('propertyId');
     if (userId) {
@@ -38,14 +38,14 @@ const Messages = () => {
 
   const startNewConversation = async (userId, propertyId) => {
     try {
-      // Check if conversation already exists
+      
       const existingConv = conversations.find(c => String(c.other_user_id) === String(userId));
       if (existingConv) {
         handleSelectConversation(existingConv);
         return;
       }
 
-      // Fetch property details to get owner info
+      
       if (propertyId) {
         const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/properties/${propertyId}`);
         const data = await response.json();
@@ -96,13 +96,13 @@ const Messages = () => {
       
       setNewMessage('');
       
-      // If this was a new conversation, refresh the conversations list
+      
       if (newConversationUser) {
         await fetchConversations();
         setNewConversationUser(null);
       }
       
-      // Refresh messages
+      
       const response = await messageService.getConversation(selectedConversation.other_user_id);
       setMessages(response.messages);
     } catch (error) {

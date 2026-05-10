@@ -1,7 +1,7 @@
-/**
- * Home Page
- * Landing page with hero section and featured properties
- */
+
+
+
+
 
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -51,7 +51,7 @@ const Home = () => {
     
     try {
       await bookmarkService.toggleBookmark(propertyId);
-      // Update local state
+      
       setProperties(props => 
         props.map(p => p.id === propertyId ? {...p, isBookmarked: !p.isBookmarked} : p)
       );
@@ -62,7 +62,7 @@ const Home = () => {
 
   return (
     <div className={styles.home}>
-      {/* Hero Section */}
+      {}
       <section className={styles.hero}>
         <div className={styles.heroContent}>
           <h1 className={styles.heroTitle}>
@@ -105,7 +105,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Featured Properties */}
+      {}
       <section className={styles.featured}>
         <div className={styles.container}>
           <div className={styles.sectionHeader}>
@@ -134,7 +134,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Features Section */}
+      {}
       <section className={styles.features}>
         <div className={styles.container}>
           <h2 className={styles.sectionTitle}>Why Choose HouseHub?</h2>
@@ -163,7 +163,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* CTA Section */}
+      {}
       <section className={styles.cta}>
         <div className={styles.container}>
           <div className={styles.ctaContent}>

@@ -1,7 +1,7 @@
-/**
- * Model Index
- * Exports all Mongoose models
- */
+
+
+
+
 
 const User = require('./User');
 const Property = require('./Property');

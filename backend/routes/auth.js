@@ -1,7 +1,7 @@
-/**
- * Auth Routes
- * Routes for authentication and user management
- */
+
+
+
+
 
 const express = require('express');
 const router = express.Router();
@@ -16,7 +16,7 @@ const {
   updateProfile
 } = authController;
 
-// Register new user
+
 router.post(
   '/register',
   [
@@ -28,7 +28,7 @@ router.post(
   register
 );
 
-// Login user
+
 router.post(
   '/login',
   [
@@ -39,10 +39,10 @@ router.post(
   login
 );
 
-// Get current user profile (protected)
+
 router.get('/profile', authenticateUser, getProfile);
 
-// Update user profile (protected)
+
 router.put(
   '/profile',
   [

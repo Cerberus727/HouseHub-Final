@@ -1,20 +1,20 @@
-/**
- * Bookmark Controller
- * Handles bookmark/save property functionality
- */
+
+
+
+
 
 const { pool } = require('../config/database');
 
-/**
- * Toggle bookmark on a property
- * POST /api/bookmarks/toggle/:propertyId
- */
+
+
+
+
 const toggleBookmark = async (req, res) => {
   try {
     const propertyId = req.params.propertyId;
     const userId = req.user.id;
 
-    // Check if property exists
+    
     const [properties] = await pool.query(
       'SELECT id FROM properties WHERE id = ?',
       [propertyId]
@@ -27,14 +27,14 @@ const toggleBookmark = async (req, res) => {
       });
     }
 
-    // Check if already bookmarked
+    
     const [bookmarks] = await pool.query(
       'SELECT id FROM bookmarks WHERE user_id = ? AND property_id = ?',
       [userId, propertyId]
     );
 
     if (bookmarks.length > 0) {
-      // Remove bookmark
+      
       await pool.query(
         'DELETE FROM bookmarks WHERE user_id = ? AND property_id = ?',
         [userId, propertyId]
@@ -46,7 +46,7 @@ const toggleBookmark = async (req, res) => {
         isBookmarked: false
       });
     } else {
-      // Add bookmark
+      
       await pool.query(
         'INSERT INTO bookmarks (user_id, property_id) VALUES (?, ?)',
         [userId, propertyId]
@@ -68,23 +68,23 @@ const toggleBookmark = async (req, res) => {
   }
 };
 
-/**
- * Get user's bookmarked properties
- * GET /api/bookmarks
- */
+
+
+
+
 const getBookmarkedProperties = async (req, res) => {
   try {
     const { page = 1, limit = 12 } = req.query;
     const userId = req.user.id;
 
-    // Get total count
+    
     const [countResult] = await pool.query(
       'SELECT COUNT(*) as total FROM bookmarks WHERE user_id = ?',
       [userId]
     );
     const total = countResult[0].total;
 
-    // Get bookmarked properties
+    
     const offset = (page - 1) * limit;
     const [properties] = await pool.query(
       `SELECT p.*, 
@@ -102,7 +102,7 @@ const getBookmarkedProperties = async (req, res) => {
       [userId, parseInt(limit), parseInt(offset)]
     );
 
-    // Parse amenities
+    
     properties.forEach(property => {
       property.amenities = property.amenities ? JSON.parse(property.amenities) : [];
       property.isBookmarked = true;
@@ -128,10 +128,10 @@ const getBookmarkedProperties = async (req, res) => {
   }
 };
 
-/**
- * Check if property is bookmarked
- * GET /api/bookmarks/check/:propertyId
- */
+
+
+
+
 const checkBookmark = async (req, res) => {
   try {
     const propertyId = req.params.propertyId;

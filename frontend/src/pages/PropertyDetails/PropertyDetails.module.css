@@ -18,7 +18,7 @@
   min-height: 60vh;
 }
 
-/* Gallery */
+
 .gallery {
   background-color: var(--white);
   border-radius: var(--radius-lg);
@@ -75,7 +75,7 @@
   font-size: 1.25rem;
 }
 
-/* Content */
+
 .content {
   display: grid;
   grid-template-columns: 1fr 350px;
@@ -206,7 +206,7 @@
   color: var(--gray-700);
 }
 
-/* Owner Card */
+
 .ownerCard {
   background-color: var(--white);
   border-radius: var(--radius-lg);

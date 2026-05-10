@@ -1,34 +1,34 @@
-/**
- * Authentication Controller
- * Handles user registration, login, and profile management with SQLite + JWT
- */
+
+
+
+
 
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { db } = require('../config/database');
 
-// Register new user
+
 exports.register = async (req, res) => {
   try {
     const { email, password, displayName, phoneNumber } = req.body;
 
-    // Check if user already exists
+    
     const existingUser = db.prepare('SELECT id FROM users WHERE email = ?').get(email);
 
     if (existingUser) {
       return res.status(400).json({ error: 'Email already registered' });
     }
 
-    // Hash password
+    
     const passwordHash = await bcrypt.hash(password, 10);
 
-    // Create user
+    
     const stmt = db.prepare('INSERT INTO users (email, password_hash, display_name, phone_number) VALUES (?, ?, ?, ?)');
     const result = stmt.run(email, passwordHash, displayName, phoneNumber || null);
 
     const user = db.prepare('SELECT id, email, display_name, phone_number FROM users WHERE id = ?').get(result.lastInsertRowid);
 
-    // Generate JWT token
+    
     const token = jwt.sign(
       { userId: user.id, email: user.email },
       process.env.JWT_SECRET || 'your-secret-key',
@@ -52,12 +52,12 @@ exports.register = async (req, res) => {
   }
 };
 
-// Login user
+
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Find user by email
+    
     const user = db.prepare('SELECT id, email, password_hash, display_name, phone_number, profile_image_url FROM users WHERE email = ?').get(email);
 
 
@@ -65,14 +65,14 @@ exports.login = async (req, res) => {
       return res.status(401).json({ error: 'Invalid email or password' });
     }
 
-    // Verify password
+    
     const isValidPassword = await bcrypt.compare(password, user.password_hash);
 
     if (!isValidPassword) {
       return res.status(401).json({ error: 'Invalid email or password' });
     }
 
-    // Generate JWT token
+    
     const token = jwt.sign(
       { userId: user.id, email: user.email },
       process.env.JWT_SECRET || 'your-secret-key',
@@ -97,7 +97,7 @@ exports.login = async (req, res) => {
   }
 };
 
-// Get user profile
+
 exports.getProfile = async (req, res) => {
   try {
     const userId = req.user.userId;
@@ -108,7 +108,7 @@ exports.getProfile = async (req, res) => {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    // Get bookmark count
+    
     const bookmarkCount = db.prepare('SELECT COUNT(*) as count FROM bookmarks WHERE user_id = ?').get(userId);
 
     res.json({
@@ -129,7 +129,7 @@ exports.getProfile = async (req, res) => {
   }
 };
 
-// Update user profile
+
 exports.updateProfile = async (req, res) => {
   try {
     const userId = req.user.userId;
