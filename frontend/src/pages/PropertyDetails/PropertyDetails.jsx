@@ -5,7 +5,7 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { FiHeart, FiMapPin, FiHome, FiDroplet, FiMaximize2, FiMail } from 'react-icons/fi';
+import { FiHeart, FiMapPin, FiHome, FiDroplet, FiMaximize2, FiMail, FiEdit2, FiTrash2 } from 'react-icons/fi';
 import { propertyService } from '../../services/propertyService';
 import { bookmarkService } from '../../services/bookmarkService';
 import { formatPrice, formatDate, propertyTypeLabels } from '../../utils/helpers';
@@ -55,6 +55,23 @@ const PropertyDetails = () => {
       return;
     }
     navigate(`/messages?userId=${property.owner_id}&propertyId=${property.id}`);
+  };
+
+  const handleEdit = () => {
+    navigate(`/edit-property/${id}`);
+  };
+
+  const handleDelete = async () => {
+    if (!window.confirm('Are you sure you want to delete this property?')) {
+      return;
+    }
+    try {
+      await propertyService.deleteProperty(id);
+      navigate('/dashboard');
+    } catch (error) {
+      console.error('Error deleting property:', error);
+      alert('Failed to delete property. Please try again.');
+    }
   };
 
   if (loading) {
@@ -165,25 +182,38 @@ const PropertyDetails = () => {
 
           {/* Owner Card */}
           <div className={styles.ownerCard}>
-            <h3>Contact Owner</h3>
-            <div className={styles.ownerInfo}>
-              {property.owner_image ? (
-                <img src={property.owner_image} alt={property.owner_name} className={styles.ownerAvatar} />
-              ) : (
-                <div className={styles.ownerAvatarPlaceholder}>
-                  {property.owner_name?.charAt(0)}
-                </div>
-              )}
-              <div>
-                <h4>{property.owner_name}</h4>
-                <p>Property Owner</p>
+            <h3>{currentUser && currentUser.id === property.owner_id ? 'Manage Property' : 'Contact Owner'}</h3>
+            {currentUser && currentUser.id === property.owner_id ? (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                <Button fullWidth onClick={handleEdit} variant="primary">
+                  <FiEdit2 /> Edit Property
+                </Button>
+                <Button fullWidth onClick={handleDelete} variant="danger" style={{ backgroundColor: '#dc3545', color: 'white', borderColor: '#dc3545' }}>
+                  <FiTrash2 /> Delete Property
+                </Button>
               </div>
-            </div>
-            <Button fullWidth onClick={handleContactOwner}>
-              <FiMail /> Contact Owner
-            </Button>
-            {property.owner_phone && (
-              <p className={styles.phone}>Phone: {property.owner_phone}</p>
+            ) : (
+              <>
+                <div className={styles.ownerInfo}>
+                  {property.owner_image ? (
+                    <img src={property.owner_image} alt={property.owner_name} className={styles.ownerAvatar} />
+                  ) : (
+                    <div className={styles.ownerAvatarPlaceholder}>
+                      {property.owner_name?.charAt(0)}
+                    </div>
+                  )}
+                  <div>
+                    <h4>{property.owner_name}</h4>
+                    <p>Property Owner</p>
+                  </div>
+                </div>
+                <Button fullWidth onClick={handleContactOwner}>
+                  <FiMail /> Contact Owner
+                </Button>
+                {property.owner_phone && (
+                  <p className={styles.phone}>Phone: {property.owner_phone}</p>
+                )}
+              </>
             )}
           </div>
         </div>
